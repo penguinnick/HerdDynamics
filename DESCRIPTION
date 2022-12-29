@@ -1,10 +1,14 @@
 Package: HerdDynamics
-Title: What the Package Does (One Line, Title Case)
+Title: Enables Livestock Demographic Modelling
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+    person("Nicholas", "Triozzi", , "triozzi@ucsb.edu", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-1856-7449"))
+Description: HerdDynamics can be used to project age and sex structured 
+    population changes of livestock herds. Input parameters include age- and sex-
+    specific offtake rates, fertility (i.e., parturitions and prolificacy), and 
+    mortality. Additional tools allow for adjustment factors to be generated to 
+    reach a steady state of herd growth.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -14,3 +18,5 @@ Suggests:
 Config/testthat/edition: 3
 Imports: 
     mmage
+URL: https://github.com/penguinnick/HerdDynamics
+BugReports: https://github.com/penguinnick/HerdDynamics/issues
