@@ -6,10 +6,12 @@
 #' @param p0 integer the initial population size
 #' @return a list containing: lambda of herd, a dataframe with sex proportions of the herd, and a dataframe with initial herd traits, including reproductive value by sex/age class
 #' @references Lesnoff, M. (*), 2015. mmage: A R package for age-structured population matrix models. CIRAD, Montpellier, France. http://livtools.cirad.fr.
+#' @importFrom mmage fmat fproj2vec fnorm
+#' @export
 
 
 
-projectHerd = function (all.param, nbcycle, nbphase,  vec=TRUE){
+project_herd = function (all.param, nbcycle, nbphase,  vec=TRUE){
   nbstep = nbcycle * nbphase
   listpar = vector("list", length=nbstep)
   with(all.param,{
@@ -18,7 +20,7 @@ projectHerd = function (all.param, nbcycle, nbphase,  vec=TRUE){
         listpar[[i]] = param
     }
 
-    cal <- mmage::zcal(nbphase, nbstep + 1) # run zcal function (mmage)
+    cal <- mmage.zcal(nbphase, nbstep + 1) # run zcal function (mmage)
     cal
     z <- as.data.frame(listpar[[1]]) # set z as a listpar item
     Lf <- length(z$sex[z$sex == "F"]) - 1  # get length of male and female age classes
@@ -26,14 +28,15 @@ projectHerd = function (all.param, nbcycle, nbphase,  vec=TRUE){
     tcla <- z[, 1:5]   # subset z
     tcla2 <- tcla[tcla$class > 0, ]  # subset again
     matx <- matrix(0, Lf + Lm, nbstep + 1) # build matrix for storing results
-    matx[, 1] <- initial.herd$x  # populate with initial herd numbers
+    matx[, 1] <- initial.herd$xini  # populate with initial herd numbers
     matoff <- matdea <- matb <- X <- matrix(0, Lf + Lm + 2, nbstep)  # build offtake matrix
     matpar <- matrix(0, Lf + Lm, nbstep)  # build parturition matrix
-    source("../R/mmagefmat.R")  # improved fmat function
+    # source("../R/mmagefmat.R")  # improved fmat function
 
     # calculate step-wise herd demography changes
     for (j in 1:nbstep) {
-      u <- fmat(listpar[[j]], Lf, Lm)
+      # u <- fmat(listpar[[j]], Lf, Lm)
+      u <- mmage.fmat(listpar[[j]], Lf, Lm)
       matx[, j + 1] <- u$A %*% matx[, j]
       X[, j] <- u$FEC %*% matx[, j]
       matb[c(1, Lf + 2), j] <- X[c(1, Lf + 2), j]
