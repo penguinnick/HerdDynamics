@@ -13,8 +13,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-
-
 <!-- badges: start -->
 <!-- badges: end -->
 
@@ -34,7 +32,7 @@ devtools::install_github("penguinnick/HerdDynamics")
 
 This document outlines the procedures for simulating goat and sheep herd dynamics and using the resulting models in a stochastic dynamic program that will identify the optimal culling strategy and herd reproduction parameters. The code here supports Chapter 2 of Nick Triozzi's PhD Dissertation.
 
-This is a basic example which shows you how to project herd growth under Redding's (1981) Energy strategy:
+This is a basic example which shows you how to project herd growth under a single offtake strategy:
 
 ```{r example}
 library(HerdDynamics)
@@ -42,18 +40,18 @@ library(HerdDynamics)
 
 ## Age Classes
 
-The first step is to establish age classes for the simulation. Ethnographic data on mortality, fertility, and culling by age and sex are provided with some variation. Meanwhile, animal ages derived from dental wear analysis of ovicaprids are estimates and the grouping of ages into classes varies depending on methodology. For example, Payne's work separates ages into classes A through I and Grant's work distinguishes age by month. Synthesized mandible ontogenic stages provided by  Vigne and Helmer demonstrate theses groupings and their coresponding ages in years. Marom and Bar-Oz compare the culling profiles we use and implement ages in years ranging from 0.17 to 8 years. 
+The first step is to establish age classes for the simulation. In this program age classes for males and females may be specified separately. However, culling profiles constructed from archaeological remains cannot distinguish male from female mandibles. Therefore, offtake rates modeled here will be applied to the entire herd while separate intrinsic mortality rates will be defined separately for males and females.
 
-In this program age classes for males and females may be specified separately. However, culling profiles constructed from archaeological remains cannot distinguish male from female mandibles. Therefore, offtake rates modeled here will be applied to the entire herd while separate intrinsic mortality rates will be defined separately for males and females.
 ```{r ageclass}
 #-- Age classes specifying the length of each age class, in years.
+ages = c(0.17, 0.5, 1, 2, 3, 4, 5, 6, 7, 8)
 lclass = c(0.17, 0.5, 1, 1, 1, 1, 1, 1, 1, 1)
 tcla = build_tcla(female.ages = lclass, male.ages = lclass, nbphase = 12) #The parameter nbphase is set to 12 which converts ages to months.
-tcla
+head(tcla)
 ```
 # Offtake
 
-The offtake rates given here are generated from zooarchaeological research which does not account for sex-based differences in culling practices.  These offtake rates usually describe culling strategies for a whole herd, regardless of sex. Here we use them to model the offtake rates of males. Female offtake rates are simulated using Redding's models for Energy and Security strategies, which calculate the number of male lambs and female animals available for offtake using 50% and 75% of natural deaths, respectively. These numbers are different for goats and sheep. We incorporate the female offtake rates as percentages of Redding's modeled herd. The doe or ewe offtake rates are used in a later step where we specify the female offtake rate.
+The offtake rates given here are generated from zooarchaeological research which does not account for sex-based differences in culling practices.  These offtake rates usually describe culling strategies for a whole herd, regardless of sex. Here we use them to model the offtake rates of females. 
 
 ```{r offtake}
 #-- create a list of offtake strategies specifying probability of survival by age
@@ -66,33 +64,25 @@ offtake.models = list(
 offtake.models = lapply(offtake.models, function(x){1-(x/100)})
 
 #-- plot offtake models
-ages = c(0.17, 0.5, 1, 2, 3, 4, 5, 6, 7, 8)
 title = "Culling Strategies for Sheep and Goats"
 plot_offtake(offtake.models, ages, title)
-
 ```
 
 ## Herd Population Growth Parameters - Intrinsic Mortality
 
-Offtake represents the number of animals slaughtered in each age group. These numbers will affect herd size changes by restricting the number of animals available to reproduce. Two other important parameters are *intrinsic mortality* and *fertility*.  
-
-The probability that an animal will survive from one timestep to the next is affected by the competing risks of being slaughtered (i.e., offtake) and intrinsic mortality. We set intrinsic mortality for males and females separately. According to Redding, there is no conclusive evidence that there is a difference in mortality between male and female lambs and kids. Redding applies a mortality rate of 32% for lambs and 45% for kids. Ewe and doe mortality from ages 1-9 is 18%. 10% for rams and 15% for bucks aged 1 to 2 years, and 5% for both species ages 2-6 years and 100% for ages six and up. Male mortality is modeled slightly lower than female mortality since rams and bucks selected for breeding should be more robust and have better resistance to disease, whereas this artificial selection should be weaker for females. We simulate this by making females in their later years much more susceptible to natural deaths than males.
+The probability that an animal will survive from one timestep to the next is affected by the competing risks of being slaughtered (i.e., offtake) and intrinsic mortality. We set intrinsic mortality for males and females separately.
 
 ```{r mortality}
 #-- goat intrinsic mortality rates
 doe.mortality =  c( 0.179, 0.453, 0.18, 0.18, 0.18, 0.18, 0.18,  0.18,  0.18, 0.18)
 buck.mortality = c(0.179,  0.453, 0.15, 0.15, 0.05, 0.05, 0.05,  0.05,  1.00, 1.00)
-
 ```
 
 ## Reproduction Parameters
 Several parameters are important regarding the reproductive biology of goats and sheep.
-*pfbirth* specifies probability of giving birth to a female. This value is set as 0.5 by default in the code generating the parameter table.
-*part.age* specifies the age of first parturition. , as an index corresponding to the age classes defined by *lclassf* and *lclassm*. By setting this variable to 4, we set the age of first parturition to 1 year.
-*parturition* specifies the number of parturitions per female per year. Redding models a breeding rate of once per year but notes that under conditions of very good pasturage goats may breed twice per year (1981:59). We set *parturition* to 1.2.
-
-*prolificacy* specifies the prolificacy rate, defined as the number of live offspring per parturition per year. Goats are capable of giving birth to twins, triplets, and quadruplets, while kidding rates increase with age up to five or six years (Redding, 1981:70). We use Redding's estimated average kidding rate of 1.20.
-The net fecundity rate is the product of the parturition and net prolificacy rates. The parturition rate is calculated differently for birth-pulse (all births occur at the same time) and birth-flow models (births occur continuously  over the time interval (t, t+1)). The Parturition rate *vpar* is dependent on the number of individuals removed from the herd, or *ptot* which is the sum of natural death rates and offtake rates. $vpar=(1-ptot/2)*hpar$ where *hpar* is the number of parturitions expected per female-time unit. 
+*part.age* specifies the age of first parturition. 
+*parturition* specifies the number of parturitions per female per year. 
+*prolificacy* specifies the prolificacy rate, defined as the number of live offspring per parturition per year. Age-specific rates are available.
 
 After setting these variables we create a parameter data frame that will be used to compute lambda, reproductive values, and project herd growth
 
@@ -106,50 +96,45 @@ goat.parms = list(
   m.mortality = buck.mortality,
   m.offtake = c(    0,   25,   25,     50, 75, 75,   75,   80, 90,  100)  / 100 # male offtake
 )
-
-# param = build_param(tcla = tcla, parms=goat.parms, male.offtake = TRUE, offtake = offtake.models$Meat, phase="month")
 param = lapply(offtake.models, function(o){build_param(tcla = tcla, parms=goat.parms, male.offtake = TRUE, offtake = o, phase="month")})
-
-```
-
-## Reproduction Traits
-We can now compute reproductive traits for the herds under different culling regimes.
-
-```{r lambda}
-# repro = get_lambda(param, tcla, p0=1000)  
 repro = lapply(param, function(p){ get_lambda(p, tcla, p0=1000) }) 
-repro$Meat$lambda
-repro$Meat$sex.proportion
-repro$Meat$initial.herd
 
 ```
-
 
 ## Demographic Projection
 Now we run the projection. We start with an initial herd size of 200 animals.
 First we define *nbcycle* as number of cycles to project through (i.e., years). We keep the previously defined value  *nbphase* (nbphase=12=12 months). *nbstep* is the product of these values and will calculate the change in herd demography from one phase to the next (i.e., from 1 month to the next).
 
-*listpar* is defined as an empty list of length *nbstep* that will store the results of herd dynamics for every step in the projection. 
-*results* is defined as a list of length *param* that will store the stepwise dynamics for each of the offtake models defined previously.
-
-lapply is used to run the function fproj on the initial population vectors derived from the herd demographics created earlier, and stores the projection results in the *results* list.
+lapply is used to run the function *projest_herd* and stores the projection *results* as a list.
 
 ```{r projection}
+all.param = param_list(param, repro)
 #-- put all parameters into a list
-all.param = param_list(param = param, repro)
-# meat.res = project_herd(all.param$Meat,nbcycle = 20,nbphase = 12,vec = TRUE)
-lapply(all.param, function(a){project_herd(a, 20, 12)})
+results = lapply(all.param, function(a){project_herd(a, 20, 12)})
+# summarize results
+tot.pop.res = lapply(results, function(r){pop_summary(r, interval = "month")})
 
-
+res.to.df = function(tot.pop.res){
+  df = do.call(rbind.data.frame, args=c(tot.pop.res, make.row.names=FALSE))
+  strats = names(tot.pop.res)
+  df$strategy = unlist(lapply(strats, FUN=rep, (nrow(df)/length(strats))))
+  return(df)
+}
+z = res.to.df(tot.pop.res)
 ```
 
+```{r plot, echo = FALSE}
+#-- plot
+p = ggplot2::ggplot(data = z, ggplot2::aes(x = time, y = pop, group = strategy))
+p = p + ggplot2::geom_line(ggplot2::aes(colour = strategy))
+p = p + ggplot2::labs(x = "Time",y = "Nb. animals")
+p
+```
 
 You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/v1/examples>.
 
 You can also embed plots, for example:
 
-```{r pressure, echo = FALSE}
 
-```
 
 In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
