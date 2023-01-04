@@ -4,7 +4,7 @@
 \alias{build_tcla}
 \title{Build age-class and sex structured table. The output table (using mmage naming convention tcla) is the first step for herd projection.}
 \usage{
-build_tcla(female.ages, male.ages, nbphase)
+build_tcla(female.ages, male.ages = NULL, nbphase)
 }
 \arguments{
 \item{female.ages}{a vector of numbers containing the length of age classes in years for females where c(0.5, 1, 1) corresponds to 6 months, 1 year, 2 years of age. If terminal age is not Inf, a truncated model will be produced.}

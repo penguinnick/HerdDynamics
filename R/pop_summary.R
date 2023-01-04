@@ -1,18 +1,12 @@
 #' Script summarizes population change through time.
 #' @param x list created with projectHerd function
-#' @param interval a character string, either "month" to get results by time step or "year" to get results by cycle
+#' @param ... field names passed on to group_by arg in dplyr. This will be any combination of tim, cycle, sex, class, etc.
 #' @return data.frame with two columns (time, population)
+#' @importFrom dplyr group_by %>% summarise
 #' @export
-#'
-#'
-pop_summary = function(x, interval){
-  vecx=x$vecx
-  if(interval=="month"){
-    out = aggregate(x~tim, data=vecx, FUN=sum)
-  }
-  if(interval=="year"){
-    out = aggregate(x~cycle, data=vecx, FUN=sum)
-  }
-  colnames(out) = c("time", "pop")
-  return(out)
+
+
+pop_summary = function( x, ... , interval=NULL) {
+  x = x$vecx
+  x %>% group_by( ... ) %>% summarise( n = sum( x ))
 }

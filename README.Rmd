@@ -96,8 +96,7 @@ goat.parms = list(
   m.mortality = buck.mortality,
   m.offtake = c(    0,   25,   25,     50, 75, 75,   75,   80, 90,  100)  / 100 # male offtake
 )
-build_param(tcla, parms = goat.parms, offtake = offtake.models$Meat, phase="year")
-# build_param(tcla, parms = goat.parms, offtake = offtake.models$Meat, phase="month")
+
 param = lapply(offtake.models, function(o){build_param(tcla = tcla, parms=goat.parms, male.offtake = TRUE, offtake = o, phase="month")})
 repro = lapply(param, function(p){ get_lambda(p, tcla, p0=1000) }) 
 
@@ -110,33 +109,29 @@ First we define *nbcycle* as number of cycles to project through (i.e., years). 
 lapply is used to run the function *projest_herd* and stores the projection *results* as a list.
 
 ```{r projection}
-all.param = param_list(param, repro)
 #-- put all parameters into a list
+all.param = param_list(param, repro)
+#-- project hurts
 results = lapply(all.param, function(a){project_herd(a, 20, 12)})
-# summarize results
-tot.pop.res = lapply(results, function(r){pop_summary(r, interval = "month")})
-
-res.to.df = function(tot.pop.res){
-  df = do.call(rbind.data.frame, args=c(tot.pop.res, make.row.names=FALSE))
-  strats = names(tot.pop.res)
-  df$strategy = unlist(lapply(strats, FUN=rep, (nrow(df)/length(strats))))
-  return(df)
-}
-z = res.to.df(tot.pop.res)
 ```
 
 ```{r plot, echo = FALSE}
-#-- plot
-p = ggplot2::ggplot(data = z, ggplot2::aes(x = time, y = pop, group = strategy))
+#-- summarize results by cycle, time, and sex 
+tot.pop.res = lapply(results, function(r){pop_summary(r, tim, cycle, sex)})
+z = res2df(tot.pop.res)
+
+p = ggplot2::ggplot(data = z, ggplot2::aes(x = tim, y = n))
+p = p + ggplot2::geom_col(ggplot2::aes( fill=sex), position = "stack")
+p = p + ggplot2::labs(x = "Time",y = "Nb. animals") + ggplot2::facet_wrap(~strategy)
+p
+
+#-- plot population change through time
+tot.pop.res = lapply(results, function(r){pop_summary(r, tim)})
+z = res2df(tot.pop.res)
+p = ggplot2::ggplot(data = z, ggplot2::aes(x = tim, y = n, group = strategy))
 p = p + ggplot2::geom_line(ggplot2::aes(colour = strategy))
 p = p + ggplot2::labs(x = "Time",y = "Nb. animals")
 p
 ```
 
 You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/v1/examples>.
-
-You can also embed plots, for example:
-
-
-
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.

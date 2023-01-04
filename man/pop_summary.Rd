@@ -4,12 +4,12 @@
 \alias{pop_summary}
 \title{Script summarizes population change through time.}
 \usage{
-pop_summary(x, interval)
+pop_summary(x, ..., interval = NULL)
 }
 \arguments{
 \item{x}{list created with projectHerd function}
 
-\item{interval}{a character string, either "month" to get results by time step or "year" to get results by cycle}
+\item{...}{field names passed on to group_by arg in dplyr. This will be any combination of tim, cycle, sex, class, etc.}
 }
 \value{
 data.frame with two columns (time, population)
