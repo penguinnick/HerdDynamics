@@ -12,20 +12,24 @@
 
 
 
-build_tcla = function(female.ages, male.ages, nbphase){
+build_tcla = function(female.ages, male.ages=NULL, nbphase){
   lclassf = female.ages
-  lclassm = male.ages
-  if (isTRUE(lclassf[length(lclassf)] == Inf)) {
+  if ( is.null( male.ages )) {
+    lclassm = NULL
+  } else {
+    lclassm = male.ages
+  }
+  if ( isTRUE( lclassf[ length( lclassf ) ] == Inf )) {
     truncated = FALSE
   } else {
     truncated = TRUE
   }
 
-  if (truncated) {
+  if ( truncated ) {
     agef = female.ages
-    lclassf = c(agef * nbphase, 1) # convert ages to months (if nbphase = 12) and add class value 1 to end for truncated model
+    lclassf = c( agef * nbphase, 1 ) # convert ages to months (if nbphase = 12) and add class value 1 to end for truncated model
     agem = male.ages
-    lclassm = c(agem * nbphase, 1)  # convert ages to months and add class value 1 to end for truncated model
+    lclassm = c( agem * nbphase, 1 )  # convert ages to months and add class value 1 to end for truncated model
   } else {
     lclassf = lclassf * nbphase
     lclassm = lclassm * nbphase
@@ -35,6 +39,7 @@ build_tcla = function(female.ages, male.ages, nbphase){
 
   # lclassm[length(lclassm)-1]=lclassm[length(lclassm)-1]-1
   #-- create tcla dataframe
-  tcla = mmage::fclass(lclassf, lclassm)
+  # tcla = mmage::fclass(lclassf, lclassm)
+  tcla = mmage_fclass( lclassf, lclassm )
   return(tcla)
 }

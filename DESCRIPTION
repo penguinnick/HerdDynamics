@@ -19,6 +19,7 @@ Config/testthat/edition: 3
 Imports: 
     dplyr,
     ggplot2,
-    mmage
+    mmage,
+    tidyr
 URL: https://github.com/penguinnick/HerdDynamics
 BugReports: https://github.com/penguinnick/HerdDynamics/issues

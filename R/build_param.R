@@ -2,35 +2,25 @@
 #' This function solves an error thrown when fmat(param) is run by specifying Lf and Lm as performed in fvh2par
 #' @param tcla data.frame created with fclass function (see mmage package)
 #' @param parms a list containing:
+#' ages (a vector of ages equal the length of lclass in tcla table)
 #' pfbirth (vector of probabilities of each age class giving birth to a female),
 #' part.age (age of first parturition; index corresponding to class in tcla$class ),
 #' prolificacy (average number of offspring per birth per age, corresponding to age classes)
 #' f.mortality (a vector of length=number of age classes specifying mortality rates for each class of females)
 #' m.mortality (a vector of length=number of age classes specifying mortality rates for each class of males)
-#' f.offtake (a vector of length =number of age classes specifying culling rates for each class of females)
+#' male.offtake (a vector of length =number of age classes specifying culling rates for each class of females)
 #' @param phase a string either "year" or "month". To model annual growth, nbphase must be set to 1 when creating tcla and nbphase set to "year"
 #' To model monthly changes in growth set nbphase to "month" and 12 when creating tcla table.
 #' @param parturition parturition rate - a number representing frequency of births per year
 #' @param offtake a vector of length=length of age classes giving the harvest profile (probability of individual being killed under a particular strategy)
 #' @param lambda set to 1 default
 #' @param correctionfec Boolean, if False, a parameter set for birth pulse is generated. If true (default), birth pulse parameter set
-#' @param method set to "steady". Alternative is "geometric"
+#' @param method set to "steady", which is used to simulate birth flow. Alternative is "geom" used to simulate birth pulse.
 #' @param hazards set to TRUE if output should include a table of hazards rather than probabilities (i.e., variable hh in code)
 #' @return a data.frame to use for projecting herd demography
 #' @export
 #' @references Lesnoff, M. (*), 2015. mmage: A R package for age-structured population matrix models. CIRAD, Montpellier, France. http://livtools.cirad.fr.
-#' @examples build_param( tcla, parms, phase = "month", offtake = c(0, 0.10, 0.25, 0.50, 0.75, 0.90 ))
-
-
-#### Example of parms parameter list ####
-# parms = list(
-#   parturition = 1.2,
-#   part.age = 2,  # age of first parturition
-#   prolificacy = c( 0, 0, 0, 0.82, 1.10, 1.41, 1.45, 1.03, 1.03), # number of livebirths expected per animal per parturition per year by age class
-#   f.mortality = doe.mortality,
-#   m.mortality = buck.mortality
-#   # f.offtake = doe.mortality/2
-# )
+#' @examples parms = list(ages = c( 0.17, 0.5, 1, 2, 3, 4), parturition = 1.2, part.age = 2, prolificacy = c( 0, 0.82, 1.10, 1.41, 1.45, 1.03), f.mortality = c(0, 0.10, 0.10, 0.20, 0.50, 0.75), m.mortality = c(0, 0.10, 0.10, 0.20, 0.50, 0.75)); build_param( tcla, parms=parms, phase = "month", offtake = c(0, 0.10, 0.25, 0.50, 0.75, 0.90 ))
 
 build_param = function(tcla, parms, phase, offtake, male.offtake=FALSE, prolificacyRate=NULL, fbirthRate=0.5, lambda = 1, correctionfec = TRUE, truncated=TRUE, method = "steady", hazards = FALSE){
   if (!require('mmage')) {

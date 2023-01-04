@@ -96,6 +96,8 @@ goat.parms = list(
   m.mortality = buck.mortality,
   m.offtake = c(    0,   25,   25,     50, 75, 75,   75,   80, 90,  100)  / 100 # male offtake
 )
+build_param(tcla, parms = goat.parms, offtake = offtake.models$Meat, phase="year")
+# build_param(tcla, parms = goat.parms, offtake = offtake.models$Meat, phase="month")
 param = lapply(offtake.models, function(o){build_param(tcla = tcla, parms=goat.parms, male.offtake = TRUE, offtake = o, phase="month")})
 repro = lapply(param, function(p){ get_lambda(p, tcla, p0=1000) }) 
 
