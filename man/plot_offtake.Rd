@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_offtake.R
 \name{plot_offtake}
 \alias{plot_offtake}
-\title{Quickly plot a list of offtake models}
+\title{Quickly plot survivorship curves based on offtake rates}
 \usage{
 plot_offtake(offtake, ages, title = title)
 }
@@ -17,7 +17,7 @@ plot_offtake(offtake, ages, title = title)
 a line graph with offtake models colored by strategy.
 }
 \description{
-Quickly plot a list of offtake models
+Quickly plot survivorship curves based on offtake rates
 }
 \examples{
   x = list(

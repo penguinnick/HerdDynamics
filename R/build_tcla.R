@@ -7,7 +7,7 @@
 #' @export
 #' @import mmage
 #' @examples
-#' build_tcla(lclassf = c(1, 3, 10, Inf), lclassm = c(1, 3, 5, Inf), nbphase = 1)
+#'   build_tcla(female.ages = c(1, 3, 10, Inf), male.ages = c(1, 3, 5, Inf), nbphase = 1)
 #' @references Lesnoff, M. (*), 2015. mmage: A R package for age-structured population matrix models. CIRAD, Montpellier, France. http://livtools.cirad.fr.
 
 

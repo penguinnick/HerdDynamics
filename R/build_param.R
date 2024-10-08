@@ -19,14 +19,25 @@
 #' @return A data.frame to use for projecting herd demography.
 #' @export
 #' @references Lesnoff, M. (*), 2015. mmage: A R package for age-structured population matrix models. CIRAD, Montpellier, France. http://livtools.cirad.fr.
-#' @examples parms = list(ages = c( 0.17, 0.5, 1, 2, 3, 4), parturition = 1.2, part.age = 2, prolificacy = c( 0, 0.82, 1.10, 1.41, 1.45, 1.03), f.mortality = c(0, 0.10, 0.10, 0.20, 0.50, 0.75), m.mortality = c(0, 0.10, 0.10, 0.20, 0.50, 0.75)); build_param( tcla, parms=parms, phase = "month", offtake = c(0, 0.10, 0.25, 0.50, 0.75, 0.90 ))
+#' @examples
+#'   lclass <- c(0.17, 0.5, 1, 1, 1, 1)
+#'   tcla <- build_tcla( female.ages = lclass, male.ages = lclass, nbphase = 12)
+#'   parms = list(
+#'     ages = c( 0.17, 0.5, 1, 2, 3, 4),
+#'     parturition = 1.2,
+#'     part.age = 2,
+#'     prolificacy = c( 0, 0.82, 1.10, 1.41, 1.45, 1.03),
+#'     f.mortality = c(0, 0.10, 0.10, 0.20, 0.50, 0.75),
+#'     m.mortality = c(0, 0.10, 0.10, 0.20, 0.50, 0.75)
+#'     )
+#'   build_param(tcla, parms=parms, phase = "month", offtake = c(0, 0.10, 0.25, 0.50, 0.75, 0.90 ))
 
 build_param <- function(tcla, parms, phase, offtake, male.offtake = FALSE, prolificacyRate = NULL, fbirthRate = 0.5, lambda = 1, correctionfec = TRUE, truncated = TRUE, method = "steady", hazards = FALSE) {
-  if (!require("mmage")) {
-    PackageURL <- "ftp://ftp.cirad.fr/pub/livtools/Materials/HerdPerf/Models/mmage/mmage_2.4-2.tar.gz"
-    install.packages(PackageURL, repos = NULL, type = "source")
-    library(mmage)
-  }
+  # if (!require("mmage")) {
+  #   PackageURL <- "ftp://ftp.cirad.fr/pub/livtools/Materials/HerdPerf/Models/mmage/mmage_2.4-2.tar.gz"
+  #   install.packages(PackageURL, repos = NULL, type = "source")
+  #   library(mmage)
+  # }
   with(parms, {
     part <- parturition
     z <- tcla[tcla$class > 0, ] # subset tcla sans lclass of 0

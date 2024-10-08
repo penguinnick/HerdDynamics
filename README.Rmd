@@ -56,7 +56,7 @@ head(tcla)
 
 The offtake rates given here are generated from zooarchaeological research which does not account for sex-based differences in culling practices.  These offtake rates usually describe culling strategies for a whole herd, regardless of sex. Here we use them to model the offtake rates of females. 
 
-```{r offtake}
+```{r offtake, fig.dim=c(4,6)}
 #-- create a list of offtake strategies specifying probability of survival by age
 offtake.models <- list(
   Meat     = c(100, 85, 75, 70, 50, 30, 22, 19, 19, 10), # Payne 1973

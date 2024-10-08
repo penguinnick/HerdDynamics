@@ -98,8 +98,8 @@ and females separately.
 
 ``` r
 #-- goat intrinsic mortality rates
-doe.mortality =  c( 0.179, 0.453, 0.18, 0.18, 0.18, 0.18, 0.18,  0.18,  0.18, 0.18)
-buck.mortality = c(0.179,  0.453, 0.15, 0.15, 0.05, 0.05, 0.05,  0.05,  1.00, 1.00)
+doe.mortality =  c(0.179, 0.453, 0.18, 0.18, 0.18, 0.18, 0.18,  0.18,  0.18, 0.18)
+buck.mortality = c(0.179, 0.453, 0.15, 0.15, 0.05, 0.05, 0.05,  0.05,  1.00, 1.00)
 ```
 
 ## Reproduction Parameters
