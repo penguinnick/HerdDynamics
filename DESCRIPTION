@@ -21,5 +21,7 @@ Imports:
     ggplot2,
     mmage,
     tidyr
+Remotes:
+    git::https://gitlab.cirad.fr/selmet/livtools/mmage.git
 URL: https://github.com/penguinnick/HerdDynamics
 BugReports: https://github.com/penguinnick/HerdDynamics/issues

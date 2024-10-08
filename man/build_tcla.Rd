@@ -4,14 +4,14 @@
 \alias{build_tcla}
 \title{Build age-class and sex structured table. The output table (using mmage naming convention tcla) is the first step for herd projection.}
 \usage{
-build_tcla(female.ages, male.ages = NULL, nbphase)
+build_tcla(female.ages, male.ages = NULL, nbphase = 1)
 }
 \arguments{
-\item{female.ages}{a vector of numbers containing the length of age classes in years for females where c(0.5, 1, 1) corresponds to 6 months, 1 year, 2 years of age. If terminal age is not Inf, a truncated model will be produced.}
+\item{female.ages}{A numeric vector specifying the bin widths of age classes in years for females where c(0.5, 1, 1) corresponds to 6 months, 1 year, 2 years of age. If terminal age is not Inf, a truncated model will be produced.}
 
 \item{male.ages}{a vector of numbers containing the length of age classes in years for males where c(0.5, 1, 1) corresponds to 6 months, 1 year, 2 years of age. If terminal age is not Inf, a truncated model will be produced.}
 
-\item{nbphase}{an integer by which age classes will be multiplied. Set nbphase to 1 to model population growth by year, set to 12 to model monthly growth}
+\item{nbphase}{An integer by which age classes will be multiplied. Default is 1. Set to 12 to model population growth by month.}
 }
 \value{
 data.frame created with fclass function (see mmage package)

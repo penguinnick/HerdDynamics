@@ -20,5 +20,10 @@ a line graph with offtake models colored by strategy.
 Quickly plot a list of offtake models
 }
 \examples{
-plot.offtake(offtake = list( Meat = c(0, 0.10, 0.25, 0.50, 0.75, 0.90 ), Milk = c(0, 0.10, 0.15, 0.20, 0.65, 0.95 )), ages = c(0.5, 1, 2, 3, 4, 5), title="Meat vs Milk")
+  x = list(
+    Meat = c(0, 0.10, 0.25, 0.50, 0.75, 0.90 ),
+    Milk = c(0, 0.10, 0.15, 0.20, 0.65, 0.95 )
+    )
+  a = c(0.5, 1, 2, 3, 4, 5)
+  plot_offtake(offtake = x, ages = a , title="Meat vs Milk")
 }

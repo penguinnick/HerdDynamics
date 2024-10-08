@@ -35,18 +35,22 @@ library(HerdDynamics)
 
 ## Age Classes
 
-The first step is to establish age classes for the simulation. In this
-program age classes for males and females may be specified separately.
-However, culling profiles constructed from archaeological remains cannot
-distinguish male from female mandibles. Therefore, offtake rates modeled
-here will be applied to the entire herd while separate intrinsic
-mortality rates will be defined separately for males and females.
+The first step is to build a table containing information about the age
+groups used in the projections. In this program age classes for males
+and females may be specified separately. However, culling profiles
+constructed from archaeological remains cannot distinguish male from
+female mandibles. Therefore, offtake rates modeled here will be applied
+to the entire herd while intrinsic mortality rates will be defined
+separately for males and females.
 
 ``` r
-#-- Age classes specifying the length of each age class, in years.
-ages = c(0.17, 0.5, 1, 2, 3, 4, 5, 6, 7, 8)
-lclass = c(0.17, 0.5, 1, 1, 1, 1, 1, 1, 1, 1)
-tcla = build_tcla(female.ages = lclass, male.ages = lclass, nbphase = 12) #The parameter nbphase is set to 12 which converts ages to months.
+# Age classes specifying the length of each age class, in years.
+ages <- c(0.17, 0.5, 1, 2, 3, 4, 5, 6, 7, 8)
+lclass <- c(0.17, 0.5, 1, 1, 1, 1, 1, 1, 1, 1)
+tcla <- build_tcla( female.ages = lclass, 
+  male.ages = lclass, 
+  nbphase = 12 #The parameter nbphase is set to 12 which converts ages to months.
+  ) 
 head(tcla)
 #>   sex class lclass cellmin cellmax
 #> 1   F     0   2.04    0.00    0.00
@@ -67,16 +71,19 @@ rates of females.
 
 ``` r
 #-- create a list of offtake strategies specifying probability of survival by age
-offtake.models = list(
-  Meat     = c( 100,   85,   75,   70,     50, 30, 22,   19,   19, 10),    # Payne 1973
-  Milk     = c( 100,   47,   42,   39,     35, 28, 23,   18,   19, 10),    # Payne 1973
-  Wool     = c( 100,   85,   75,   65,     63, 57, 50,   43,   43, 20))    # Payne 1973
+offtake.models <- list(
+  Meat     = c(100, 85, 75, 70, 50, 30, 22, 19, 19, 10), # Payne 1973
+  Milk     = c(100, 47, 42, 39, 35, 28, 23, 18, 19, 10), # Payne 1973
+  Wool     = c(100, 85, 75, 65, 63, 57, 50, 43, 43, 20)
+) # Payne 1973
 
 #-- convert survivorship to mortality
-offtake.models = lapply(offtake.models, function(x){1-(x/100)})
+offtake.models <- lapply(offtake.models, function(x) {
+  1 - (x / 100)
+})
 
 #-- plot offtake models
-title = "Culling Strategies for Sheep and Goats"
+title <- "Culling Strategies for Sheep and Goats"
 plot_offtake(offtake.models, ages, title)
 ```
 
@@ -119,7 +126,6 @@ goat.parms = list(
 )
 
 param = lapply(offtake.models, function(o){build_param(tcla = tcla, parms=goat.parms, male.offtake = TRUE, offtake = o, phase="month")})
-#> Loading required package: mmage
 repro = lapply(param, function(p){ get_lambda(p, tcla, p0=1000) }) 
 ```
 
