@@ -9,7 +9,7 @@ build_param(
   parms,
   phase,
   offtake,
-  male.offtake = FALSE,
+  male.offtake = NULL,
   prolificacyRate = NULL,
   fbirthRate = 0.5,
   lambda = 1,
@@ -35,6 +35,8 @@ male.offtake (a vector of length =number of age classes specifying culling rates
 To model monthly changes in growth set nbphase to "month" and 12 when creating tcla table.}
 
 \item{offtake}{A vector of length=length of age classes giving the harvest profile (probability of individual being killed under a particular strategy).}
+
+\item{male.offtake}{A vector of length=length of age classes giving the culling rates for males. If NULL (default) the culling rates in 'offtake' are used for both males and females.}
 
 \item{lambda}{Set to 1 by default as the growth rate of the herd.}
 
@@ -63,7 +65,7 @@ This function builds the param table containing age and sex classes needed to pr
     f.mortality = c(0, 0.10, 0.10, 0.20, 0.50, 0.75),
     m.mortality = c(0, 0.10, 0.10, 0.20, 0.50, 0.75)
     )
-  build_param(tcla, parms=parms, phase = "month", offtake = c(0, 0.10, 0.25, 0.50, 0.75, 0.90 ))
+  build_param(tcla, parms=parms, phase = "month", offtake = c(0, 0.10, 0.25, 0.50, 0.75, 0.90 ), male.offtake = NULL, prolificacyRate = NULL, fbirthRate = 0.5, lambda = 1, correctionfec = TRUE, truncated = TRUE, method = "steady", hazards = FALSE)
 }
 \references{
 Lesnoff, M. (*), 2015. mmage: A R package for age-structured population matrix models. CIRAD, Montpellier, France. http://livtools.cirad.fr.

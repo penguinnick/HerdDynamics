@@ -11,6 +11,8 @@
 #'   a = c(0.5, 1, 2, 3, 4, 5)
 #'   plot_offtake(offtake = x, ages = a , title="Meat vs Milk")
 #' @export
+#' @import ggplot2
+#' @importFrom tidyr gather
 #'
 #'
 plot_offtake <- function(offtake, ages, title = title) {

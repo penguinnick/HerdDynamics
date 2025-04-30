@@ -20,8 +20,12 @@ Imports:
     dplyr,
     ggplot2,
     mmage,
-    tidyr
+    tidyr,
+    rcartocolor
 Remotes:
     git::https://gitlab.cirad.fr/selmet/livtools/mmage.git
 URL: https://github.com/penguinnick/HerdDynamics
 BugReports: https://github.com/penguinnick/HerdDynamics/issues
+Depends: 
+    R (>= 3.5)
+LazyData: true
