@@ -166,7 +166,7 @@ build_param = function(
     #   return(out)
     # }
 
-    z[,6:10] = sapply(z[,6:10], convert_to_phase)
+    z[,6:10] = sapply(z[,6:10], convert_to_phase, nbphase=nbphase) # convert rates to phase
 
     hh = z
     vh = fhh2vh(hh)
