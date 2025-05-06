@@ -91,34 +91,34 @@ build_param = function(
     sdProlificacy = sd( prolificacy[ prolificacy > 0 ] )
 
     #-- function to autogenerate prolificacy rates, used when prolificacyRate set to "auto". These lines to be removed in package version.
-    generate_ProlificacyRates <- function( meanPro = MeanProlificacy, sdPro = sdProlificacy,  n = length( part.age.Ind : len.fclass )) {
-
-      s = seq( 1 : n )
-      p.order = c( s[ s %% 2 == 1 ], rev( s[ s %% 2 != 1 ] ))
-      # Generate n values from a normal distribution
-      values <- rnorm(100, meanPro, sdPro)
-      # sample values
-      value.sample = sample(values, n)
-      # Sort the values
-      sv <- sort( abs( values ) )
-      sv <- sort( abs( value.sample ) )
-      # Arrange values so that peak values are in the middle
-      arranged_values = sv[ p.order ]
-
-      return(abs( arranged_values) )
-    }
+    # generate_prolificacy_rates <- function( meanPro = MeanProlificacy, sdPro = sdProlificacy,  n = length( part.age.Ind : len.fclass )) {
+    #
+    #   s = seq( 1 : n )
+    #   p.order = c( s[ s %% 2 == 1 ], rev( s[ s %% 2 != 1 ] ))
+    #   # Generate n values from a normal distribution
+    #   values <- rnorm(100, meanPro, sdPro)
+    #   # sample values
+    #   value.sample = sample(values, n)
+    #   # Sort the values
+    #   sv <- sort( abs( values ) )
+    #   sv <- sort( abs( value.sample ) )
+    #   # Arrange values so that peak values are in the middle
+    #   arranged_values = sv[ p.order ]
+    #
+    #   return(abs( arranged_values) )
+    # }
 
     #-- used when Inf.Mortality set to "auto". To be removed in package version!
-    generate_InfantMortalityRates <- function( Mort = f.mortality, n = 3) {
-      inf.mort = Mort[1:3]
-      sort(generate_ProlificacyRates(meanPro = mean(inf.mort), sdPro = sd(inf.mort), n = 3), decreasing = TRUE )
-    }
+    # generate_infant_mortality_rates <- function( Mort = f.mortality, n = 3) {
+    #   inf.mort = Mort[1:3]
+    #   sort(generate_prolificacy_rates(meanPro = mean(inf.mort), sdPro = sd(inf.mort), n = 3), decreasing = TRUE )
+    # }
 
     if (is.null( prolificacyRate )) {
       Prolificacy.Rate = prolificacy[prolificacy > 0]
     } else {
       if ( prolificacyRate=="auto" ) {
-        Prolificacy.Rate = generate_ProlificacyRates()
+        Prolificacy.Rate = generate_prolificacy_rates(meanPro = MeanProlificacy, sdPro = sdProlificacy, n = length( part.age.Ind : len.fclass ))
       }
     }
 
@@ -129,8 +129,14 @@ build_param = function(
       m.mortality = m.mortality
     } else {
       if (Inf.Mortality == "auto" ) {
-        f.mortality[1:3] = generate_InfantMortalityRates()
-        m.mortality[1:3] = generate_InfantMortalityRates()
+        f.mortality[1:3] = generate_infant_mortality_rates(
+          Mort = f.mortality,
+          n = 3
+        )
+        m.mortality[1:3] = generate_infant_mortality_rates(
+          Mort = m.mortality,
+          n = 3
+        )
       }
     }
 
@@ -154,13 +160,13 @@ build_param = function(
     z$hoff = c( f.off, offtake[-1] )
     z$hdea = c(f.mortality, m.mortality)
 
-    #--  function to transform rates based on nbphase
-    convert.to.phase = function(x){
-      out = x / nbphase
-      return(out)
-    }
+    # #--  function to transform rates based on nbphase
+    # convert_to_phase = function(x){
+    #   out = x / nbphase
+    #   return(out)
+    # }
 
-    z[,6:10] = sapply(z[,6:10], convert.to.phase)
+    z[,6:10] = sapply(z[,6:10], convert_to_phase)
 
     hh = z
     vh = fhh2vh(hh)

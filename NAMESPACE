@@ -3,6 +3,8 @@
 export(build_param)
 export(build_param_depricated)
 export(build_tcla)
+export(generate_infant_mortality_rates)
+export(generate_prolificacy_rates)
 export(get_lambda)
 export(mmage.fmat)
 export(mmage.zcal)
