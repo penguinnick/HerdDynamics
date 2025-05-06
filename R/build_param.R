@@ -1,4 +1,5 @@
 #' This function builds the param table containing age and sex classes needed to project a population using mmage package
+#' Depricated, to be replaced by advanced build
 #' @param tcla A data.frame created with mmage::fclass().
 #' @param parms A list containing:
 #'   ages (a vector of ages equal the length of lclass in tcla table)
@@ -20,7 +21,7 @@
 #' @return A data.frame to use for projecting herd demography.
 #' @export
 #' @references Lesnoff, M. (*), 2015. mmage: A R package for age-structured population matrix models. CIRAD, Montpellier, France. http://livtools.cirad.fr.
-#' @examples
+#' ##Old example##
 #'   lclass <- c(0.17, 0.5, 1, 1, 1, 1)
 #'   tcla <- build_tcla( female.ages = lclass, male.ages = lclass, nbphase = 12)
 #'   parms = list(
@@ -31,9 +32,9 @@
 #'     f.mortality = c(0, 0.10, 0.10, 0.20, 0.50, 0.75),
 #'     m.mortality = c(0, 0.10, 0.10, 0.20, 0.50, 0.75)
 #'     )
-#'   build_param(tcla, parms=parms, phase = "month", offtake = c(0, 0.10, 0.25, 0.50, 0.75, 0.90 ), male.offtake = NULL, prolificacyRate = NULL, fbirthRate = 0.5, lambda = 1, correctionfec = TRUE, truncated = TRUE, method = "steady", hazards = FALSE)
+#'   build_param_depricated(tcla, parms=parms, phase = "month", offtake = c(0, 0, 0.10, 0.25, 0.50, 0.75, 0.90 ), male.offtake = NULL, prolificacyRate = NULL, fbirthRate = 0.5, lambda = 1, correctionfec = TRUE, truncated = TRUE, method = "steady", hazards = FALSE)
 
-build_param <- function(tcla, parms, phase, offtake, male.offtake = NULL, prolificacyRate = NULL, fbirthRate = 0.5, lambda = 1, correctionfec = TRUE, truncated = TRUE, method = "steady", hazards = FALSE) {
+build_param_depricated <- function(tcla, parms, phase, offtake, male.offtake = NULL, prolificacyRate = NULL, fbirthRate = 0.5, lambda = 1, correctionfec = TRUE, truncated = TRUE, method = "steady", hazards = FALSE) {
   # if (!require("mmage")) {
   #   PackageURL <- "ftp://ftp.cirad.fr/pub/livtools/Materials/HerdPerf/Models/mmage/mmage_2.4-2.tar.gz"
   #   install.packages(PackageURL, repos = NULL, type = "source")

@@ -17,7 +17,8 @@ project_herd = function (all.param, nbcycle, nbphase,  vec=TRUE){
   with(all.param,{
     #-- assign each strategy's matrix to a list position
     for(i in 1:nbstep){
-        listpar[[i]] = param
+        # listpar[[i]] = param # assign param to listpar (line below amended to handle recursive list problem)
+        listpar[[i]] = param$param
     }
 
     cal <- mmage.zcal(nbphase, nbstep + 1) # run zcal function (mmage)

@@ -15,10 +15,14 @@
 #' @importFrom tidyr gather
 #'
 #'
-plot_offtake <- function(offtake, ages, title = title) {
+plot_offtake <- function(offtake, ages=NULL, title) {
+  if (is.null(ages)) {
+    ages <- c(0, Payne_ages$ages)
+  }
   df <- offtake_to_df(offtake, ages)
   ggplot(data = df, aes(x = .data$age, y = .data$p.survival, group = .data$strategy)) +
     geom_line(aes(colour = .data$strategy)) +
     geom_point(aes(colour = .data$strategy)) +
-    labs(title = title, y = "Probability of Survival", x = "Age in years", colour = "Strategy")
+    labs(title = title, y = "Probability of Survival", x = "Age in years", colour = "Strategy") +
+    theme_minimal()
 }

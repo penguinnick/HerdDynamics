@@ -28,10 +28,14 @@
 #   labs(title = title, y = "Probability of Survival", x = "Age in years", colour = "Strategy")
 # }
 #-- a function to plot survivorship curves
-plot_survivorship <- function(x, ages, title = "Survivorship Curves", key) {
+plot_survivorship <- function(x, ages = NULL, title = "Survivorship Curves", key = "strategy") {
   cbPalette <- rcartocolor::carto_pal(length(x), "Safe")
   df <- data.frame(matrix(unlist(x), ncol = length(x), byrow = F)) # create dataframe from offtake.models
-  df$age <- ages
+  if (is.null(ages)) {
+    df$age <- c("", Payne_ages$ageClasses)
+  } else {
+    df$age <- ages
+  }
   colnames(df) <- c(names(x), "age")
   df <- df %>% tidyr::gather(key = key, value = "p.survival", -age)
   df$p.survival <- df$p.survival / 100 # convert percentages to probability

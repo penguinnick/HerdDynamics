@@ -4,7 +4,7 @@
 \alias{plot_offtake}
 \title{Quickly plot survivorship curves based on offtake rates}
 \usage{
-plot_offtake(offtake, ages, title = title)
+plot_offtake(offtake, ages = NULL, title)
 }
 \arguments{
 \item{offtake}{a list of vectors with numbers corresponding the offtake probabilities by age}

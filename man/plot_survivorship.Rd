@@ -4,7 +4,12 @@
 \alias{plot_survivorship}
 \title{Quickly plot survivorship curves}
 \usage{
-plot_survivorship(x, ages, title = "Survivorship Curves", key)
+plot_survivorship(
+  x,
+  ages = NULL,
+  title = "Survivorship Curves",
+  key = "strategy"
+)
 }
 \arguments{
 \item{x}{a list of vectors with numbers corresponding the survival probabilities by age}
