@@ -21,7 +21,8 @@ Imports:
     ggplot2,
     mmage,
     tidyr,
-    rcartocolor
+    rcartocolor,
+    stringr
 Remotes:
     git::https://gitlab.cirad.fr/selmet/livtools/mmage.git
 URL: https://github.com/penguinnick/HerdDynamics

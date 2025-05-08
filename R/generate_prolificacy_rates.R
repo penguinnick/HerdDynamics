@@ -15,7 +15,7 @@ generate_prolificacy_rates <- function( meanPro, sdPro,  n, sample_size = 100 ) 
   # order the sequence so that the first half is in ascending order and the second half is in descending order
   p.order = c( s[ s %% 2 == 1 ], rev( s[ s %% 2 != 1 ] ))
   # Generate n values from a normal distribution
-  values <- rnorm(sample_size, meanPro, sdPro)
+  values <- stats::rnorm(sample_size, meanPro, sdPro)
   # sample values
   value.sample = sample(values, n)
   # Sort the values

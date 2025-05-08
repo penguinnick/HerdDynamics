@@ -1,15 +1,17 @@
-#' Correct Counts function used for building mortality profiles. 
+#' Correct Counts function used for building mortality profiles.
 #' Function takes as input a string of letters A:I corresponding to Payne's Age classes.
-#' Creates a data.frame tallying age classes. 
+#' Creates a data.frame tallying age classes.
 #' Function corrects counts of age class occurrences by adding fractions to total count based on number of different age classes suggested for an individual.
 #' @param a column containing Payne's Age Groups
 #' @param probability.correction logical. Whether to correct counts using Vigne and Helmer's (2007) probability correction rule. Default FALSE. If TRUE, combines age groups EF, and HI
+#' @export
+#' @importFrom stringr str_match
 #' @returns A two-column dataframe of age class (V) and corrected count (n)
-#' 
+#'
 #'@description
 #'Function works as follows... to correct counts of age groups we need to:
 #' 1. create a vector of valid groups, v (i.e., A-I)
-#' 2. create a table, t to store the number of occurrences, n of each group in v that exist in the input table 
+#' 2. create a table, t to store the number of occurrences, n of each group in v that exist in the input table
 #' 3. for each item, i that has 0 groups listed, skip.
 #' 4. for each item i, that has only one group listed, add 1 to n in table t for group v[i]
 #' 5. for multiple groups listed, create a vector, g to store the groups listed.
@@ -22,7 +24,7 @@ correct.counts = function(a, probability.correction = FALSE){
   v = LETTERS[1:9]
   # table to store counts
   t = data.frame(v=v, n=0)
-  
+
   for(i in 1:length(a)){ # iterate through rows
     if(nchar(a[i])==0){  # if blank, do nothing
       next
@@ -39,7 +41,7 @@ correct.counts = function(a, probability.correction = FALSE){
       }
     }
   }
-  
+
   rel.freq = function( x ) {
     tot = sum( x )
     q = vector()
@@ -48,15 +50,15 @@ correct.counts = function(a, probability.correction = FALSE){
     }
     q
   }
-  
+
   if( probability.correction ){
     t2 = data.frame(v = t$v[1:4], n = t$n[1:4])
     t2 = rbind.data.frame(t2, data.frame(v = c("EF", "G", "HI"), n = c( t$n[5] + t$n[6], t$n[7], t$n[8] + t$n[9] )))
-    
+
     # relative frequencies
     t2$qx = rel.freq( t2$n )
-    
-    #-- probability corrections after Vigne and Helmer 2007: 
+
+    #-- probability corrections after Vigne and Helmer 2007:
     #-- for age groups A,   B,   C,  D, EF,   G,   HI
     #-- probability  1/6, 1/3, 1/2, 1,   2,  2,   4
     t2$fd = t2$qx * c(    6,   3,   2, 1, 0.5, 0.5, 0.25 ) # 1/p correction
@@ -64,6 +66,6 @@ correct.counts = function(a, probability.correction = FALSE){
     # t2$n[5:7] = c( t$n[5] + t$n[6], t$n[7], t$n[8] + t$n[9] )
     t = t2
   }
-  
+
   return(as.data.frame(t))
 }

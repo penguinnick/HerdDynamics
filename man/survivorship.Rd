@@ -2,7 +2,7 @@
 % Please edit documentation in R/survivorship.R
 \name{survivorship}
 \alias{survivorship}
-\title{Survivorship function}
+\title{Survivorship function to calculate survivorship probabilities from absolute frequencies}
 \usage{
 survivorship(x)
 }
@@ -13,7 +13,7 @@ survivorship(x)
 Running the function will give a vector equal in length to x containing survival probabilities for each age class.
 }
 \description{
-Survivorship function
+Survivorship function to calculate survivorship probabilities from absolute frequencies
 }
 \references{
 Price, M., Wolfhagen, J. and Otárola-Castillo, E. (2016). Confidence Intervals in the Analysis of Mortality and Survivorship Curves in Zooarchaeology. Am. Antiq. 81: 157–173.

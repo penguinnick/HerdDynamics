@@ -12,5 +12,5 @@
 
 generate_infant_mortality_rates <- function( Mort, n = 3) {
   inf.mort = Mort[1:n]
-  sort(generate_prolificacy_rates(meanPro = mean(inf.mort), sdPro = sd(inf.mort), n = n), decreasing = TRUE )
+  sort(generate_prolificacy_rates(meanPro = mean(inf.mort), sdPro = stats::sd(inf.mort), n = n), decreasing = TRUE )
 }

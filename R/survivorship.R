@@ -1,7 +1,10 @@
-#' Survivorship function
+#' Survivorship function to calculate survivorship probabilities from absolute frequencies
+#'
 #' @param x is a vector containing the absolute frequencies of individuals in each age class
-#' @return Running the function will give a vector equal in length to x containing survival probabilities for each age class. 
+#' @return Running the function will give a vector equal in length to x containing survival probabilities for each age class.
+#' @export
 #' @references Price, M., Wolfhagen, J. and Otárola-Castillo, E. (2016). Confidence Intervals in the Analysis of Mortality and Survivorship Curves in Zooarchaeology. Am. Antiq. 81: 157–173.
+
 survivorship = function( x ){
   rel.freq = function( x ) {
     tot = sum( x )
